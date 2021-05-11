@@ -8,14 +8,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UserModule,
     PassportModule,
     JwtModule.registerAsync({
-      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET', 'secret'),
         signOptions: {

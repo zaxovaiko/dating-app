@@ -1,6 +1,7 @@
 export interface Information {
-  age: number;
+  birthDate: Date;
   status: string;
+  languages: string[];
   hobbies: string[];
   images: string[];
   location: Location;

@@ -5,6 +5,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 import { ConfigService } from '@nestjs/config';
+import { UpdateNameUserDto } from './dto/update-name-user.dto';
+import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
 
 @Injectable()
 export class UserService {
@@ -25,19 +27,38 @@ export class UserService {
     return await this.userModel.create(createUserDto);
   }
 
-  findAll() {
-    return this.userModel.find();
+  findMany() {
+    return this.userModel.find({}, '-password');
   }
 
   findOneByEmail(email: string) {
     return this.userModel.findOne({ email });
   }
 
-  findOne(id: string) {
-    return this.userModel.findById(id);
+  async updateName(id: string, updateNameUserDto: UpdateNameUserDto) {
+    const user = await this.findOne(id);
+    for (const [key, value] of Object.entries(updateNameUserDto)) {
+      user[key] = value;
+    }
+    return await user.save();
   }
 
-  remove(id: string) {
-    return this.userModel.findByIdAndDelete(id);
+  async updateAvatar(id: string, updateAvatarUserDto: UpdateAvatarUserDto) {
+    const user = await this.findOne(id);
+    user.avatar = updateAvatarUserDto.avatar;
+    return await user.save();
+  }
+
+  async findOne(id: string) {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
+
+  async remove(id: string) {
+    const user = await this.findOne(id);
+    return await user.deleteOne();
   }
 }

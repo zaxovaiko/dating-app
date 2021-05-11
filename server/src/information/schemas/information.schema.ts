@@ -1,18 +1,21 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 
-export type InformationType = Information & Document;
+export type InformationDocument = Information & Document;
 
 @Schema({ timestamps: true })
 export class Information {
-  @Prop()
-  age: number;
+  @Prop(Date)
+  birthDate: Date;
 
   @Prop()
   status: string;
 
   @Prop([String])
   hobbies: string[];
+
+  @Prop([String])
+  languages: string[];
 
   @Prop([String])
   images: string[];
