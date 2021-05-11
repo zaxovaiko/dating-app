@@ -1,10 +1,11 @@
-import { Information } from "src/information/interfaces/information.interface";
+import { Information } from 'src/information/interfaces/information.interface';
 
 export interface User {
   firstName: string;
   lastName: string;
   email: string;
   avatar: string;
+  roles: string[];
   password: string;
   completeSignup: boolean;
   information: Information;

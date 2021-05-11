@@ -1,4 +1,7 @@
+import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
+
+export type InformationType = Information & Document;
 
 @Schema({ timestamps: true })
 export class Information {
@@ -22,7 +25,7 @@ export class Information {
       latitude: { type: Number },
     }),
   )
-  location: Record<string, any>
+  location: Record<string, any>;
 }
 
 export const InformationSchema = SchemaFactory.createForClass(Information);
