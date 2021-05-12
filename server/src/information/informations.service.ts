@@ -1,22 +1,25 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserService } from 'src/user/user.service';
+import { UsersService } from 'src/user/users.service';
 import { CreateInformationDto } from './dto/create-information.dto';
 import { UpdateInformationDto } from './dto/update-information.dto';
-import { Information, InformationDocument } from './schemas/information.schema';
+import {
+  Information,
+  InformationDocument,
+} from './schemas/informations.schema';
 
 @Injectable()
-export class InformationService {
+export class InformationsService {
   constructor(
     @InjectModel(Information.name)
-    private informationModel: Model<InformationDocument>,
-    private userService: UserService,
+    private informationsModel: Model<InformationDocument>,
+    private usersService: UsersService,
   ) {}
 
   async create(userId: string, createInformationDto: CreateInformationDto) {
-    const user = await this.userService.findOne(userId);
-    const info = await this.informationModel.create(createInformationDto);
+    const user = await this.usersService.findOne(userId);
+    const info = await this.informationsModel.create(createInformationDto);
     user.information = info;
     user.completeSignup = true;
     await user.save();
@@ -24,7 +27,7 @@ export class InformationService {
   }
 
   async findOne(id: string) {
-    const info = await this.informationModel.findById(id);
+    const info = await this.informationsModel.findById(id);
     if (!info) {
       throw new HttpException(
         'Information does not exist',

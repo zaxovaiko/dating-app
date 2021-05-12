@@ -3,15 +3,15 @@ import { Model } from 'mongoose';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User, UserDocument } from './schemas/user.schema';
+import { User, UserDocument } from './schemas/users.schema';
 import { ConfigService } from '@nestjs/config';
 import { UpdateNameUserDto } from './dto/update-name-user.dto';
 import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
 
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(User.name) private usersModel: Model<UserDocument>,
     private configServer: ConfigService,
   ) {}
 
@@ -24,15 +24,15 @@ export class UserService {
       createUserDto.password,
       parseInt(this.configServer.get<string>('BCRYPT_SALT_ROUNDS', '12')),
     );
-    return await this.userModel.create(createUserDto);
+    return await this.usersModel.create(createUserDto);
   }
 
   findMany() {
-    return this.userModel.find({}, '-password');
+    return this.usersModel.find({}, '-password');
   }
 
   findOneByEmail(email: string) {
-    return this.userModel.findOne({ email });
+    return this.usersModel.findOne({ email });
   }
 
   async updateName(id: string, updateNameUserDto: UpdateNameUserDto) {
@@ -50,7 +50,7 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    const user = await this.userModel.findById(id);
+    const user = await this.usersModel.findById(id);
     if (!user) {
       throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
     }

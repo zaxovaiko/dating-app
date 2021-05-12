@@ -3,6 +3,7 @@ import {
   IsLatitude,
   IsLongitude,
   IsOptional,
+  MaxLength,
   ValidateNested,
 } from 'class-validator';
 
@@ -28,6 +29,10 @@ export class CreateInformationDto {
   birthDate: Date;
 
   @IsOptional()
+  sex: string;
+
+  @IsOptional()
+  @MaxLength(300)
   status: string;
 
   @IsOptional()

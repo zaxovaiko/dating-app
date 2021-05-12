@@ -1,26 +1,26 @@
 import { Module } from '@nestjs/common';
-import { InformationService } from './information.service';
-import { InformationController } from './information.controller';
+import { InformationsService } from './informations.service';
+import { InformationsController } from './informations.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Information, InformationSchema } from './schemas/information.schema';
+import { Information, InformationSchema } from './schemas/informations.schema';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { UserModule } from 'src/user/user.module';
+import { UsersModule } from 'src/user/users.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Information.name, schema: InformationSchema },
     ]),
-    UserModule,
+    UsersModule,
   ],
-  controllers: [InformationController],
+  controllers: [InformationsController],
   providers: [
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
-    InformationService,
+    InformationsService,
   ],
 })
-export class InformationModule {}
+export class InformationsModule {}

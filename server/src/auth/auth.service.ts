@@ -3,13 +3,13 @@ import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
 import { SignupAuthDto } from './dto/signup-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { UserService } from '../user/user.service';
+import { UsersService } from '../user/users.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private userService: UsersService,
     private jwtService: JwtService,
   ) {}
 

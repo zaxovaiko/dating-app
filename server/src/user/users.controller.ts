@@ -7,28 +7,28 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateNameUserDto } from './dto/update-name-user.dto';
 import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
 
-@Controller('user')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+    return this.usersService.create(createUserDto);
   }
 
   @Get()
   findMany() {
-    return this.userService.findMany();
+    return this.usersService.findMany();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+    return this.usersService.findOne(id);
   }
 
   @Patch('avatar/:id')
@@ -36,16 +36,16 @@ export class UserController {
     @Param('id') id: string,
     updateAvatarUserDto: UpdateAvatarUserDto,
   ) {
-    return this.userService.updateAvatar(id, updateAvatarUserDto);
+    return this.usersService.updateAvatar(id, updateAvatarUserDto);
   }
 
   @Patch(':id')
   updateName(@Param('id') id: string, updateNameUserDto: UpdateNameUserDto) {
-    return this.userService.updateName(id, updateNameUserDto);
+    return this.usersService.updateName(id, updateNameUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+    return this.usersService.remove(id);
   }
 }

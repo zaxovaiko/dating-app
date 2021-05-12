@@ -11,6 +11,9 @@ export class Information {
   @Prop()
   status: string;
 
+  @Prop()
+  sex: string;
+
   @Prop([String])
   hobbies: string[];
 

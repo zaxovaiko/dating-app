@@ -1,5 +1,6 @@
 export interface Information {
   birthDate: Date;
+  sex: string;
   status: string;
   languages: string[];
   hobbies: string[];

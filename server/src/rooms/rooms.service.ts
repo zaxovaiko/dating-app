@@ -5,16 +5,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room, RoomDocument } from './schemas/rooms.schema';
 import { ConfigService } from '@nestjs/config';
-import { UserService } from '../user/user.service';
+import { UsersService } from '../user/users.service';
 
 @Injectable()
 export class RoomsService {
   constructor(
     @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
     private configServer: ConfigService,
-    private userService: UserService
+    private userService: UsersService,
   ) {}
-
 
   async create(userId: string, createRoomDto: CreateRoomDto) {
     const user = await this.userService.findOne(userId);
