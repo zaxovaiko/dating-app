@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room, RoomDocument } from './schemas/rooms.schema';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from '../user/users.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class RoomsService {

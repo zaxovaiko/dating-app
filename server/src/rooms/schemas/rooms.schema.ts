@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { User } from 'src/user/interfaces/users.interface';
+import { User } from 'src/users/interfaces/users.interface';
 import { v4 as uuid } from 'uuid';
 
 export type RoomDocument = Room & mongoose.Document;

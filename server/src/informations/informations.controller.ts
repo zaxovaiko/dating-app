@@ -21,6 +21,11 @@ export class InformationsController {
     return this.informationsService.create(req.user.id, createInformationDto);
   }
 
+  @Get('user/:userId')
+  getUserWithInformation(@Param('userId') userId: string) {
+    return this.informationsService.getUserWithInformation(userId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.informationsService.findOne(id);

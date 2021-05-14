@@ -1,4 +1,4 @@
-import { Information } from 'src/information/interfaces/informations.interface';
+import { Information } from 'src/informations/interfaces/informations.interface';
 
 export interface User {
   firstName: string;

@@ -1,5 +1,5 @@
 import { IsNotEmpty, MaxLength } from 'class-validator';
-import { User } from 'src/user/interfaces/users.interface';
+import { User } from 'src/users/interfaces/users.interface';
 
 export class CreateRoomDto {
   @IsNotEmpty()

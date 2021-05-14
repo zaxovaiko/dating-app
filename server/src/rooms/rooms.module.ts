@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Room, RoomSchema } from './schemas/rooms.schema';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { UsersModule } from '../user/users.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [

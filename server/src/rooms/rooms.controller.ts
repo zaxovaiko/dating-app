@@ -11,7 +11,7 @@ import {
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Controller('rooms')
 export class RoomsController {
