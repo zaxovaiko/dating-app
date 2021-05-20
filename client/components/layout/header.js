@@ -28,6 +28,12 @@ export default function Header() {
                   Chats
                 </a>
               </li>
+              <Link href="/settings/settings">
+                <a className="nav-link">Settings</a>
+              </Link>
+              <Link href="/profile/profile">
+                <a className="nav-link">My Profile</a>
+              </Link>
             </ul>
           </div>
         </div>
