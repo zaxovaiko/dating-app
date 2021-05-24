@@ -1,7 +1,12 @@
-import Header from "./header";
-import Footer from "./footer";
+import { ReactChild } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
 
-export default function Layout({ children }) {
+export default function Layout({
+  children,
+}: {
+  children: ReactChild | ReactChild[];
+}) {
   return (
     <div className="d-flex flex-column h-100">
       <Header />

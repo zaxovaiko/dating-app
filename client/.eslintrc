@@ -1,26 +1,7 @@
 {
-  "extends": ["plugin:prettier/recommended", "plugin:react/recommended"],
-  "env": {
-    "commonjs": true,
-    "es6": true,
-    "browser": true,
-    "node": true
-  },
-  "parserOptions": {
-    "ecmaVersion": 2021,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true,
-      "modules": true
-    }
-  },
-  "rules": {
-    "react/prop-types": "off",
-    "react/react-in-jsx-scope": "off"
-  },
-  "settings": {
-    "react": {
-      "version": "latest"
-    }
-  }
+  "extends": [
+    "plugin:prettier/recommended",
+    "react-app",
+    "react-app/jest"
+  ]
 }

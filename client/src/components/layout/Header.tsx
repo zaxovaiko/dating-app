@@ -1,12 +1,12 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   return (
     <header>
       <nav className="navbar navbar-expand-sm navbar-dark bg-danger">
         <div className="container">
-          <Link href="/">
-            <a className="navbar-brand fw-bold">D❤ting App</a>
+          <Link to="/">
+            <span className="navbar-brand fw-bold">D❤ting App</span>
           </Link>
           <button
             className="navbar-toggler"
@@ -19,20 +19,20 @@ export default function Header() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
-                  Home
-                </a>
+                <Link to="/">
+                  <span className="nav-link active">Home</span>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Chats
-                </a>
+                <Link to="/chats">
+                  <span className="nav-link">Chats</span>
+                </Link>
               </li>
-              <Link href="/settings/settings">
-                <a className="nav-link">Settings</a>
+              <Link to="/settings">
+                <span className="nav-link">Settings</span>
               </Link>
-              <Link href="/profile/profile">
-                <a className="nav-link">My Profile</a>
+              <Link to="/profile">
+                <span className="nav-link">Profile</span>
               </Link>
             </ul>
           </div>

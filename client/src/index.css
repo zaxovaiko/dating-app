@@ -9,3 +9,7 @@ body {
 body > div {
   height: 100%;
 }
+
+#__react-alert__ {
+  position: absolute;
+}

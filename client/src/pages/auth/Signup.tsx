@@ -1,15 +1,8 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-import Layout from "../../components/layout";
+import Layout from "../../components/layout/Layout";
 
 export default function Signup() {
-  const router = useRouter();
   return (
     <Layout>
-      <Head>
-        <title>Sign up</title>
-      </Head>
-
       <form className="align-self-center py-5">
         <h4 className="mb-3 fw-bolder">Create profile</h4>
         <div className="row g-3 mb-3">
@@ -47,11 +40,7 @@ export default function Signup() {
           </label>
           <input type="password" className="form-control" id="password" />
         </div>
-        <button
-          type="button"
-          className="btn btn-outline-danger float-end"
-          onClick={() => router.push("/auth/setup")}
-        >
+        <button type="button" className="btn btn-outline-danger float-end">
           Continue
         </button>
       </form>
