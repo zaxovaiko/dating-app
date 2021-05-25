@@ -13,3 +13,7 @@ body > div {
 #__react-alert__ {
   position: absolute;
 }
+
+a {
+  text-decoration: none;
+}

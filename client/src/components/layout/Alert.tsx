@@ -8,7 +8,9 @@ export default function Alert({
 }: AlertComponentPropsWithStyle) {
   return (
     <div
-      className={`alert alert-${options.type || "primary"} mt-3`}
+      className={`alert alert-${
+        options.type?.replace("error", "danger") || "primary"
+      } mt-1`}
       style={style}
     >
       {message}

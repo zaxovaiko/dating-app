@@ -49,7 +49,7 @@ export class AuthService {
 
   async login(loginAuthDto: LoginAuthDto) {
     const user = await this.userService.findOneByEmail(loginAuthDto.email);
-    const { firstName, lastName, email, id, roles } = user;
+    const { firstName, lastName, email, id, roles, completeSignup } = user;
     return {
       access_token: this.jwtService.sign({
         firstName,
@@ -57,6 +57,7 @@ export class AuthService {
         email,
         id,
         roles,
+        completeSignup,
       }),
     };
   }

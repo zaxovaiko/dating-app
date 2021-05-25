@@ -1,10 +1,12 @@
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import validator from "validator";
+import jwtDecode from "jwt-decode";
+import { Link } from "react-router-dom";
 import { SyntheticEvent, useContext, useState } from "react";
 import { useAlert } from "react-alert";
-import jwtDecode from "jwt-decode";
 import Layout from "../../components/layout/Layout";
 import { AuthContext } from "../../contexts/AuthContext";
+import { login } from "../../api/auth";
 
 export default function Login() {
   const alert = useAlert();
@@ -19,20 +21,19 @@ export default function Login() {
       return alert.error("Invalid data");
     }
 
-    // login(form)
-    //   .then((data) => {
-    //     if (!data.access_token) {
-    //       return alert.error("Something went wrong. Try again later.");
-    //     }
-    //     setAuth({
-    //       user: jwtDecode(data.access_token),
-    //       token: data.access_token,
-    //     });
-    //     alert.success("You were logged in");
-    //   })
-    //   .catch(() => {
-    //     alert.error("Something went wrong");
-    //   });
+    login(form)
+      .then((data) => {
+        if (!data.access_token) {
+          return alert.error("Something went wrong. Try again later.");
+        }
+        setAuth({
+          user: jwtDecode(data.access_token),
+          token: data.access_token,
+        });
+      })
+      .catch(() => {
+        alert.error("Something went wrong");
+      });
   }
 
   return (
@@ -69,6 +70,7 @@ export default function Login() {
             id="password"
           />
         </div>
+        <Link to="/signup">Sign up</Link>
         <button className="btn btn-danger float-end">Log in</button>
       </form>
     </Layout>

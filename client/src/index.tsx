@@ -7,6 +7,8 @@ import App from "./App";
 import AuthContextProvider from "./contexts/AuthContext";
 import Alert from "./components/layout/Alert";
 import reportWebVitals from "./reportWebVitals";
+import { HelmetProvider } from "react-helmet-async";
+import { BrowserRouter } from "react-router-dom";
 
 const options = {
   position: positions.BOTTOM_RIGHT,
@@ -17,11 +19,15 @@ const options = {
 
 ReactDOM.render(
   <React.StrictMode>
-    <AlertProvider template={Alert} {...options}>
-      <AuthContextProvider>
-        <App />
-      </AuthContextProvider>
-    </AlertProvider>
+    <HelmetProvider>
+      <AlertProvider template={Alert} {...options}>
+        <BrowserRouter>
+          <AuthContextProvider>
+            <App />
+          </AuthContextProvider>
+        </BrowserRouter>
+      </AlertProvider>
+    </HelmetProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -1,29 +1,108 @@
+import validator from "validator";
+import { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
+import { signup } from "../../api/auth";
+import { SyntheticEvent } from "react";
+import { useAlert } from "react-alert";
+import { AuthContext } from "../../contexts/AuthContext";
+import jwtDecode from "jwt-decode";
+import { Helmet } from "react-helmet-async";
 
 export default function Signup() {
+  const alert = useAlert();
+  const { setAuth } = useContext(AuthContext);
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+  });
+
+  function handleSubmit(e: SyntheticEvent) {
+    e.preventDefault();
+
+    if (
+      !validator.isEmail(form.email) ||
+      validator.isEmpty(form.firstName) ||
+      validator.isEmpty(form.lastName) ||
+      validator.isEmpty(form.password) ||
+      validator.isEmpty(form.password_confirmation)
+    ) {
+      return alert.error("Invalid data");
+    }
+
+    if (form.password !== form.password_confirmation) {
+      return alert.error("Passwords must be equals");
+    }
+
+    signup(form)
+      .then((data) => {
+        if (!data.access_token) {
+          return alert.error("Something went wrong. Try again.");
+        }
+        setAuth({
+          token: data.access_token,
+          user: jwtDecode(data.access_token),
+        });
+      })
+      .catch(() => {
+        alert.error("Something went wrong");
+      });
+  }
+
   return (
     <Layout>
-      <form className="align-self-center py-5">
+      <Helmet>
+        <title>Sign up</title>
+      </Helmet>
+
+      <form className="align-self-center py-5" onSubmit={handleSubmit}>
         <h4 className="mb-3 fw-bolder">Create profile</h4>
         <div className="row g-3 mb-3">
           <div className="col">
             <label htmlFor="firstName" className="form-label">
               First name
             </label>
-            <input type="text" id="firstName" className="form-control" />
+            <input
+              value={form.firstName}
+              onChange={(e) =>
+                setForm((p: any) => ({ ...p, firstName: e.target.value }))
+              }
+              type="text"
+              id="firstName"
+              className="form-control"
+            />
           </div>
           <div className="col">
             <label htmlFor="lastName" className="form-label">
               Last name
             </label>
-            <input type="text" id="lastName" className="form-control" />
+            <input
+              value={form.lastName}
+              onChange={(e) =>
+                setForm((p: any) => ({ ...p, lastName: e.target.value }))
+              }
+              type="text"
+              id="lastName"
+              className="form-control"
+            />
           </div>
         </div>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email address
           </label>
-          <input type="email" className="form-control" id="email" />
+          <input
+            value={form.email}
+            onChange={(e) =>
+              setForm((p: any) => ({ ...p, email: e.target.value }))
+            }
+            type="email"
+            className="form-control"
+            id="email"
+          />
           <div id="emailHelp" className="form-text">
             We'll never share your email with anyone else.
           </div>
@@ -32,15 +111,37 @@ export default function Signup() {
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input type="password" className="form-control" id="password" />
+          <input
+            autoComplete="on"
+            value={form.password}
+            onChange={(e) =>
+              setForm((p: any) => ({ ...p, password: e.target.value }))
+            }
+            type="password"
+            className="form-control"
+            id="password"
+          />
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">
+          <label htmlFor="password-confirmation" className="form-label">
             Password confirmation
           </label>
-          <input type="password" className="form-control" id="password" />
+          <input
+            autoComplete="on"
+            value={form.password_confirmation}
+            onChange={(e) =>
+              setForm((p: any) => ({
+                ...p,
+                password_confirmation: e.target.value,
+              }))
+            }
+            type="password"
+            className="form-control"
+            id="password-confirmation"
+          />
         </div>
-        <button type="button" className="btn btn-outline-danger float-end">
+        <Link to="/login">I already have an account</Link>
+        <button type="submit" className="btn btn-outline-danger float-end">
           Continue
         </button>
       </form>
