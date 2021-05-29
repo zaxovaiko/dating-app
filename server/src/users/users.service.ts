@@ -7,58 +7,86 @@ import { User, UserDocument } from './schemas/users.schema';
 import { ConfigService } from '@nestjs/config';
 import { UpdateNameUserDto } from './dto/update-name-user.dto';
 import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
+import { InformationsService } from 'src/informations/informations.service';
+import { UpdateInformationDto } from 'src/informations/dto/update-information.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private usersModel: Model<UserDocument>,
+    private informationsService: InformationsService,
     private configServer: ConfigService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const user = await this.findOneByEmail(createUserDto.email);
-    if (user) {
+    if (await this.findOneByEmail(createUserDto.email)) {
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
     }
+
     createUserDto.password = bcrypt.hashSync(
       createUserDto.password,
       parseInt(this.configServer.get<string>('BCRYPT_SALT_ROUNDS', '12')),
     );
-    return await this.usersModel.create(createUserDto);
-  }
-
-  findMany() {
-    return this.usersModel.find({}, '-password');
-  }
-
-  findOneByEmail(email: string) {
-    return this.usersModel.findOne({ email });
-  }
-
-  async updateName(id: string, updateNameUserDto: UpdateNameUserDto) {
-    const user = await this.findOne(id);
-    for (const [key, value] of Object.entries(updateNameUserDto)) {
-      user[key] = value;
-    }
+    const user = await this.usersModel.create(createUserDto);
+    const information = await this.informationsService.create({});
+    user.information = information;
     return await user.save();
   }
 
+  findMany(projection = '') {
+    return this.usersModel.find({}, projection);
+  }
+
+  findOneByEmail(email: string, projection = '') {
+    return this.usersModel.findOne({ email }, projection);
+  }
+
+  async updateName(id: string, updateNameUserDto: UpdateNameUserDto) {
+    const user = await this.findOneById(id);
+    for (const [key, value] of Object.entries(updateNameUserDto)) {
+      user[key] = value;
+    }
+    await user.save();
+    user.password = undefined;
+    return user;
+  }
+
+  async updateInformation(
+    id: string,
+    updateInformationDto: UpdateInformationDto,
+  ) {
+    const user = await this.findOneById(id, '-password');
+    const information = await this.informationsService.update(
+      String(user.information),
+      updateInformationDto,
+    );
+    if (!information) {
+      throw new HttpException(
+        'Information was not updated',
+        HttpStatus.EXPECTATION_FAILED,
+      );
+    }
+    user.completeSignup = true;
+    await user.save();
+    return await user.populate('information').execPopulate();
+  }
+
   async updateAvatar(id: string, updateAvatarUserDto: UpdateAvatarUserDto) {
-    const user = await this.findOne(id);
+    const user = await this.findOneById(id, '-password');
     user.avatar = updateAvatarUserDto.avatar;
     return await user.save();
   }
 
-  async findOne(id: string) {
-    const user = await this.usersModel.findById(id);
-    if (!user) {
-      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
-    }
-    return user;
+  findOneById(id: string, projection = '') {
+    return this.usersModel.findById(id, projection);
   }
 
   async remove(id: string) {
-    const user = await this.findOne(id);
-    return await user.deleteOne();
+    const user = await this.usersModel.findByIdAndDelete(id, {
+      projection: '-password',
+    });
+    await this.informationsService.remove(String(user.information));
+    user.information = undefined;
+    return user;
   }
 }

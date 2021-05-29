@@ -1,58 +1,39 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UsersService } from 'src/users/users.service';
-import { CreateInformationDto } from './dto/create-information.dto';
+import { CreateOptionalInformationDto } from './dto/create-information.dto';
 import { UpdateInformationDto } from './dto/update-information.dto';
 import {
   Information,
   InformationDocument,
 } from './schemas/informations.schema';
 
+// Thoughts: information service should use user service
 @Injectable()
 export class InformationsService {
   constructor(
     @InjectModel(Information.name)
     private informationsModel: Model<InformationDocument>,
-    private usersService: UsersService,
   ) {}
 
-  async create(userId: string, createInformationDto: CreateInformationDto) {
-    const user = await this.usersService.findOne(userId);
-    const info = await this.informationsModel.create(createInformationDto);
-    user.information = info;
-    user.completeSignup = true;
-    await user.save();
-    return info;
+  create(createInformationDto: CreateOptionalInformationDto) {
+    return this.informationsModel.create(createInformationDto);
   }
 
-  async findOne(id: string) {
-    const info = await this.informationsModel.findById(id);
-    if (!info) {
-      throw new HttpException(
-        'Information does not exist',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    return info;
-  }
-
-  async getUserWithInformation(userId: string) {
-    const user = await this.usersService.findOne(userId);
-    // const info = await this.findOne(user.information); // FIXME: Pass id as param
-    return user.populate('information');
+  findOneById(id: string) {
+    return this.informationsModel.findById(id);
   }
 
   async update(id: string, updateInformationDto: UpdateInformationDto) {
-    const info = await this.findOne(id);
+    const info = await this.findOneById(id);
     for (const [key, value] of Object.entries(updateInformationDto)) {
+      // TODO: Add set for hobbies and languages
       info[key] = value;
     }
     return await info.save();
   }
 
   async remove(id: string) {
-    const info = await this.findOne(id);
-    return await info.deleteOne();
+    return this.informationsModel.findByIdAndDelete(id);
   }
 }

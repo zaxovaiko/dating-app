@@ -11,6 +11,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateNameUserDto } from './dto/update-name-user.dto';
 import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
+import { UpdateInformationDto } from 'src/informations/dto/update-information.dto';
 
 @Controller('users')
 export class UsersController {
@@ -23,25 +24,36 @@ export class UsersController {
 
   @Get()
   findMany() {
-    return this.usersService.findMany();
+    return this.usersService.findMany('-password');
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+    return this.usersService.findOneById(id, '-password');
   }
 
-  @Patch('avatar/:id')
+  @Patch(':id/avatar')
   updateAvatar(
     @Param('id') id: string,
-    updateAvatarUserDto: UpdateAvatarUserDto,
+    @Body() updateAvatarUserDto: UpdateAvatarUserDto,
   ) {
     return this.usersService.updateAvatar(id, updateAvatarUserDto);
   }
 
   @Patch(':id')
-  updateName(@Param('id') id: string, updateNameUserDto: UpdateNameUserDto) {
+  updateName(
+    @Param('id') id: string,
+    @Body() updateNameUserDto: UpdateNameUserDto,
+  ) {
     return this.usersService.updateName(id, updateNameUserDto);
+  }
+
+  @Patch(':id/information')
+  updateInformation(
+    @Param('id') id: string,
+    @Body() updateInformationDto: UpdateInformationDto,
+  ) {
+    return this.usersService.updateInformation(id, updateInformationDto);
   }
 
   @Delete(':id')

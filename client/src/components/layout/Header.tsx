@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Header() {
-  const { auth, logout } = useContext(AuthContext);
+  const { auth, logoutAndSetAuth } = useContext(AuthContext);
 
   return (
     <header>
@@ -44,7 +44,7 @@ export default function Header() {
             {auth.user && (
               <ul className="navbar-nav ms-auto">
                 <span
-                  onClick={() => logout()}
+                  onClick={() => logoutAndSetAuth()}
                   style={{ cursor: "pointer" }}
                   className="nav-link"
                 >

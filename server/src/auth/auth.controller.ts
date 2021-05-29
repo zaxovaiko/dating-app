@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { Public } from './decorator.helper';
 import { SignupAuthDto } from './dto/signup-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { LocalAuthGuard } from './local-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
@@ -17,7 +16,7 @@ export class AuthController {
   }
 
   @Public()
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(AuthGuard('local'))
   @Post('login')
   login(@Body() loginAuthDto: LoginAuthDto) {
     return this.authService.login(loginAuthDto);
@@ -35,5 +34,10 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   googleAuthRedirect(@Req() request) {
     return this.authService.googleAuth(request.user);
+  }
+
+  @Get('refresh-token')
+  refreshToken(@Req() request) {
+    return this.authService.login(request.user);
   }
 }

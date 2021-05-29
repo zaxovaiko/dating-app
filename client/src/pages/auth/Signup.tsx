@@ -2,16 +2,14 @@ import validator from "validator";
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../../components/layout/Layout";
-import { signup } from "../../api/auth";
 import { SyntheticEvent } from "react";
 import { useAlert } from "react-alert";
 import { AuthContext } from "../../contexts/AuthContext";
-import jwtDecode from "jwt-decode";
 import { Helmet } from "react-helmet-async";
 
 export default function Signup() {
   const alert = useAlert();
-  const { setAuth } = useContext(AuthContext);
+  const { signupAndSetAuth } = useContext(AuthContext);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -37,19 +35,7 @@ export default function Signup() {
       return alert.error("Passwords must be equals");
     }
 
-    signup(form)
-      .then((data) => {
-        if (!data.access_token) {
-          return alert.error("Something went wrong. Try again.");
-        }
-        setAuth({
-          token: data.access_token,
-          user: jwtDecode(data.access_token),
-        });
-      })
-      .catch(() => {
-        alert.error("Something went wrong");
-      });
+    signupAndSetAuth(form);
   }
 
   return (

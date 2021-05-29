@@ -16,7 +16,7 @@ export class RoomsService {
   ) {}
 
   async create(userId: string, createRoomDto: CreateRoomDto) {
-    const user = await this.userService.findOne(userId);
+    const user = await this.userService.findOneById(userId);
     if (!user) {
       throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
     }

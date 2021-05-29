@@ -4,4 +4,4 @@ import { CreateUserDto } from './create-user.dto';
 export class UpdateNameUserDto extends PickType(CreateUserDto, [
   'firstName',
   'lastName',
-]) {}
+] as const) {}

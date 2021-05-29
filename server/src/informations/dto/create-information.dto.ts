@@ -1,49 +1,51 @@
+import { PartialType } from '@nestjs/mapped-types';
 import {
   IsDate,
+  IsIn,
   IsLatitude,
   IsLongitude,
-  IsOptional,
+  IsString,
   MaxLength,
   ValidateNested,
 } from 'class-validator';
 
-export class Location {
-  @IsOptional()
-  country: string;
-
-  @IsOptional()
-  city: string;
-
-  @IsOptional()
+export class Coordinates {
   @IsLongitude()
   longitude: number;
 
-  @IsOptional()
   @IsLatitude()
   latitude: number;
 }
 
 export class CreateInformationDto {
-  @IsOptional()
   @IsDate()
   birthDate: Date;
 
-  @IsOptional()
+  @IsIn(['male', 'female', 'other'])
   sex: string;
 
-  @IsOptional()
   @MaxLength(300)
   status: string;
 
-  @IsOptional()
+  @MaxLength(12, {
+    each: true,
+  })
   hobbies: Set<string>;
 
-  @IsOptional()
+  @MaxLength(12, {
+    each: true,
+  })
   languages: Set<string>;
 
-  @IsOptional()
-  images: Set<string>;
+  @IsString({
+    each: true,
+  })
+  images: string[];
 
   @ValidateNested()
-  location: Location;
+  coordinates: Coordinates;
 }
+
+export class CreateOptionalInformationDto extends PartialType(
+  CreateInformationDto,
+) {}

@@ -1,16 +1,14 @@
 import { Helmet } from "react-helmet-async";
 import validator from "validator";
-import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
 import { SyntheticEvent, useContext, useState } from "react";
 import { useAlert } from "react-alert";
 import Layout from "../../components/layout/Layout";
 import { AuthContext } from "../../contexts/AuthContext";
-import { login } from "../../api/auth";
 
 export default function Login() {
   const alert = useAlert();
-  const { setAuth } = useContext(AuthContext);
+  const { loginAndSetAuth } = useContext(AuthContext);
   const [form, setForm] = useState({ email: "", password: "" });
 
   function handleSubmit(e: SyntheticEvent) {
@@ -21,19 +19,7 @@ export default function Login() {
       return alert.error("Invalid data");
     }
 
-    login(form)
-      .then((data) => {
-        if (!data.access_token) {
-          return alert.error("Something went wrong. Try again later.");
-        }
-        setAuth({
-          user: jwtDecode(data.access_token),
-          token: data.access_token,
-        });
-      })
-      .catch(() => {
-        alert.error("Something went wrong");
-      });
+    loginAndSetAuth(form);
   }
 
   return (

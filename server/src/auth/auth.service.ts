@@ -23,14 +23,14 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOneByEmail(email);
     if (!user) {
-      return null;
+      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
     }
     const match = await bcrypt.compare(pass, user.password);
     if (match) {
       const { password, ...rest } = user;
       return rest;
     }
-    return null;
+    throw new HttpException('Wrong password', HttpStatus.FORBIDDEN);
   }
 
   async signup(signupAuthDto: SignupAuthDto) {

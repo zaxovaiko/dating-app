@@ -27,6 +27,15 @@ export class User {
   @Prop({ required: true, default: false })
   completeSignup: boolean;
 
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'User' })
+  liked: User[];
+
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'User' })
+  disliked: User[];
+
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'User' })
+  saved: User[];
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Information' })
   information: Information;
 }

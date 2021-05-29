@@ -29,3 +29,11 @@ export function signup({
     body: JSON.stringify({ firstName, lastName, email, password }),
   }).then((res) => res.json());
 }
+
+export function refreshToken(token: string) {
+  return fetch(process.env.REACT_APP_HOST + "/auth/refresh-token", {
+    headers: {
+      Authorization: token,
+    },
+  }).then((res) => res.json());
+}
