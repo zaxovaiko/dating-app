@@ -7,6 +7,9 @@ export interface User {
   avatar: string;
   roles: string[];
   password: string;
+  liked: User[];
+  disliked: User[];
+  saved: User[];
   completeSignup: boolean;
   information: Information;
 }

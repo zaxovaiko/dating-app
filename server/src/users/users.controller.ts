@@ -12,6 +12,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateNameUserDto } from './dto/update-name-user.dto';
 import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
 import { UpdateInformationDto } from 'src/informations/dto/update-information.dto';
+import { Roles } from 'src/auth/roles/roles.decorator';
+import { Role } from 'src/auth/roles/role.enum';
+import { RelationUserDto } from './dto/relation-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -33,6 +36,7 @@ export class UsersController {
   }
 
   @Patch(':id/avatar')
+  @Roles(Role.Admin)
   updateAvatar(
     @Param('id') id: string,
     @Body() updateAvatarUserDto: UpdateAvatarUserDto,
@@ -41,6 +45,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @Roles(Role.Admin)
   updateName(
     @Param('id') id: string,
     @Body() updateNameUserDto: UpdateNameUserDto,
@@ -49,6 +54,7 @@ export class UsersController {
   }
 
   @Patch(':id/information')
+  @Roles(Role.Admin)
   updateInformation(
     @Param('id') id: string,
     @Body() updateInformationDto: UpdateInformationDto,
@@ -56,7 +62,18 @@ export class UsersController {
     return this.usersService.updateInformation(id, updateInformationDto);
   }
 
+  @Patch('like')
+  likeUser(@Body() relationUserDto: RelationUserDto) {
+    return this.usersService.likeUser(relationUserDto);
+  }
+
+  @Patch('dislike')
+  dislikeUser(@Body() relationUserDto: RelationUserDto) {
+    return this.usersService.dislikeUser(relationUserDto);
+  }
+
   @Delete(':id')
+  @Roles(Role.Admin)
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

@@ -9,6 +9,7 @@ import { UpdateNameUserDto } from './dto/update-name-user.dto';
 import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
 import { InformationsService } from 'src/informations/informations.service';
 import { UpdateInformationDto } from 'src/informations/dto/update-information.dto';
+import { RelationUserDto } from './dto/relation-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -88,5 +89,39 @@ export class UsersService {
     await this.informationsService.remove(String(user.information));
     user.information = undefined;
     return user;
+  }
+
+  async likeUser(relationUserDto: RelationUserDto) {
+    const { targetId, likerId } = relationUserDto;
+    const liker = await this.findOneById(likerId);
+    const target = await this.findOneById(targetId);
+    if (!liker || !target) {
+      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
+    }
+    if (liker.liked.includes(target) || liker.disliked.includes(target)) {
+      throw new HttpException(
+        'You have already liked or disliked this user',
+        HttpStatus.CONFLICT,
+      );
+    }
+    liker.liked.push(target);
+    return await liker.save();
+  }
+
+  async dislikeUser(relationUserDto: RelationUserDto) {
+    const { targetId, likerId } = relationUserDto;
+    const liker = await this.findOneById(likerId);
+    const target = await this.findOneById(targetId);
+    if (!liker || !target) {
+      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
+    }
+    if (liker.liked.includes(target) || liker.disliked.includes(target)) {
+      throw new HttpException(
+        'You have already liked or disliked this user',
+        HttpStatus.CONFLICT,
+      );
+    }
+    // check if is already liked
+    // check if is already disliked
   }
 }
