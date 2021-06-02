@@ -1,5 +1,6 @@
 import { useState, memo, SyntheticEvent, useContext } from "react";
 import { Helmet } from "react-helmet-async";
+import { useHistory } from "react-router";
 import { YMaps, Map, Placemark } from "react-yandex-maps";
 import { updateInformation } from "../../api/user";
 import Layout from "../../components/layout/Layout";
@@ -27,6 +28,7 @@ type CustomForm = {
 };
 
 function Setup() {
+  const history = useHistory();
   const { auth, refreshAndSetAuth } = useContext(AuthContext);
   const [form, setForm] = useState<UpdateUserDto & CustomForm>({
     birthDate: undefined,
@@ -48,7 +50,11 @@ function Setup() {
     e.preventDefault();
 
     updateInformation(auth.user.id, form, auth.token)
-      .then(() => refreshAndSetAuth())
+      .then(() => {
+        refreshAndSetAuth().then(() => {
+          history.push("/");
+        });
+      })
       .catch((err) => console.log(err));
   }
 

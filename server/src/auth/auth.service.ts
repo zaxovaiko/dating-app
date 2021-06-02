@@ -33,7 +33,7 @@ export class AuthService {
     throw new HttpException('Wrong password', HttpStatus.FORBIDDEN);
   }
 
-  async signup(signupAuthDto: SignupAuthDto) {
+  async signup(signupAuthDto: SignupAuthDto): Promise<any> {
     const avatar = gravatar.url(signupAuthDto.email, {
       s: '550',
       r: 'x',
@@ -47,7 +47,7 @@ export class AuthService {
     return await this.login(user);
   }
 
-  async login(loginAuthDto: LoginAuthDto) {
+  async login(loginAuthDto: LoginAuthDto): Promise<any> {
     const user = await this.userService.findOneByEmail(loginAuthDto.email);
     const { firstName, lastName, email, id, roles, completeSignup } = user;
     return {

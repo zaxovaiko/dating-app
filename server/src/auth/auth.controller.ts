@@ -18,26 +18,26 @@ export class AuthController {
   @Public()
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(@Body() loginAuthDto: LoginAuthDto) {
+  login(@Body() loginAuthDto: LoginAuthDto): Promise<any> {
     return this.authService.login(loginAuthDto);
   }
 
   @Public()
   @Get()
   @UseGuards(AuthGuard('google'))
-  googleAuth() {
+  googleAuth(): null {
     return;
   }
 
   @Public()
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() request) {
+  googleAuthRedirect(@Req() request): Promise<any> {
     return this.authService.googleAuth(request.user);
   }
 
   @Get('refresh-token')
-  refreshToken(@Req() request) {
+  refreshToken(@Req() request): Promise<any> {
     return this.authService.login(request.user);
   }
 }
