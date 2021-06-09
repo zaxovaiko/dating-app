@@ -16,7 +16,7 @@ function App() {
       {auth.user &&
         auth.user.completeSignup && [
           <Route key={1} exact path="/" component={Home} />,
-          <Route key={2} exact path="/settings" component={Settings} />,
+          <Route key={2} path="/settings" component={Settings} />,
           <Route key={3} exact path="/profile" component={Profile} />,
         ]}
       {auth.user && !auth.user.completeSignup && (

@@ -34,12 +34,17 @@ export class AuthService {
   }
 
   async signup(signupAuthDto: SignupAuthDto): Promise<any> {
+    let user = await this.userService.findOneByEmail(signupAuthDto.email);
+    if (user) {
+      throw new HttpException('User already exists', HttpStatus.CONFLICT);
+    }
+
     const avatar = gravatar.url(signupAuthDto.email, {
       s: '550',
       r: 'x',
       d: 'mp',
     });
-    const user = await this.userService.create({
+    user = await this.userService.create({
       ...signupAuthDto,
       avatar,
       completeSignup: false,

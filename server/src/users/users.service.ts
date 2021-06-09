@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { Model } from 'mongoose';
+import { Document, Model } from 'mongoose';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -10,6 +10,7 @@ import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
 import { InformationsService } from 'src/informations/informations.service';
 import { UpdateInformationDto } from 'src/informations/dto/update-information.dto';
 import { RelationUserDto } from './dto/relation-user.dto';
+import { Information } from '../informations/interfaces/informations.interface';
 
 @Injectable()
 export class UsersService {
@@ -57,8 +58,9 @@ export class UsersService {
     updateInformationDto: UpdateInformationDto,
   ) {
     const user = await this.findOneById(id, '-password');
+    const informationId = user.information as Information & Document;
     const information = await this.informationsService.update(
-      String(user.information),
+      String(informationId.id),
       updateInformationDto,
     );
     if (!information) {
@@ -78,8 +80,8 @@ export class UsersService {
     return await user.save();
   }
 
-  findOneById(id: string, projection = '') {
-    return this.usersModel.findById(id, projection);
+  findOneById(id: string, projection = '-password -liked -disliked -saved') {
+    return this.usersModel.findById(id, projection).populate('information');
   }
 
   async remove(id: string) {
@@ -91,37 +93,28 @@ export class UsersService {
     return user;
   }
 
-  async likeUser(relationUserDto: RelationUserDto) {
-    const { targetId, likerId } = relationUserDto;
+  async makeActionWithUser(relationUserDto: RelationUserDto) {
+    const { targetId, likerId, action } = relationUserDto;
     const liker = await this.findOneById(likerId);
     const target = await this.findOneById(targetId);
-    if (!liker || !target) {
-      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
-    }
-    if (liker.liked.includes(target) || liker.disliked.includes(target)) {
-      throw new HttpException(
-        'You have already liked or disliked this user',
-        HttpStatus.CONFLICT,
-      );
-    }
-    liker.liked.push(target);
-    return await liker.save();
-  }
 
-  async dislikeUser(relationUserDto: RelationUserDto) {
-    const { targetId, likerId } = relationUserDto;
-    const liker = await this.findOneById(likerId);
-    const target = await this.findOneById(targetId);
     if (!liker || !target) {
       throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
     }
+
     if (liker.liked.includes(target) || liker.disliked.includes(target)) {
       throw new HttpException(
         'You have already liked or disliked this user',
         HttpStatus.CONFLICT,
       );
     }
-    // check if is already liked
-    // check if is already disliked
+
+    if (action === 'like') {
+      liker.liked.push(target);
+    } else {
+      liker.disliked.push(target);
+    }
+
+    return await liker.save();
   }
 }

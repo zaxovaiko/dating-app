@@ -12,3 +12,11 @@ export function updateInformation(
     body: JSON.stringify(updateInfoDto),
   }).then((res) => res.json());
 }
+
+export function getOneUser(id: string, token: string) {
+  return fetch(`${process.env.REACT_APP_HOST}/users/${id}`, {
+    headers: {
+      Authorization: token,
+    },
+  }).then((res) => res.json());
+}

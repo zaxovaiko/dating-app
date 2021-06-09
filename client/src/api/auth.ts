@@ -1,11 +1,6 @@
-type User = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-};
+import { User } from "../types/User";
 
-export function login({ email, password }: Partial<User>) {
+export function login({ email, password }: Partial<User>): Promise<any> {
   return fetch(process.env.REACT_APP_HOST + "/auth/login", {
     method: "POST",
     headers: {
@@ -20,7 +15,7 @@ export function signup({
   lastName,
   email,
   password,
-}: Partial<User>) {
+}: Partial<User>): Promise<any> {
   return fetch(process.env.REACT_APP_HOST + "/auth/signup", {
     method: "POST",
     headers: {
@@ -30,7 +25,7 @@ export function signup({
   }).then((res) => res.json());
 }
 
-export function refreshToken(token: string) {
+export function refreshToken(token: string): Promise<any> {
   return fetch(process.env.REACT_APP_HOST + "/auth/refresh-token", {
     headers: {
       Authorization: token,

@@ -1,8 +1,11 @@
+import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
 import Layout from "../components/layout/Layout";
+import { AuthContext } from "../contexts/AuthContext";
+import { IAuthContext } from "../types/Context";
 
 export default function Home() {
+  const { auth } = useContext<IAuthContext>(AuthContext);
   return (
     <Layout>
       <Helmet>
@@ -10,8 +13,7 @@ export default function Home() {
       </Helmet>
 
       <div className="mx-auto">
-        <h4>You need to be logged in to see the content</h4>
-        <Link to="/login">Log in</Link> or <Link to="/signup">Sign up</Link>
+        Hello, {auth.user?.firstName} {auth.user?.lastName}
       </div>
     </Layout>
   );

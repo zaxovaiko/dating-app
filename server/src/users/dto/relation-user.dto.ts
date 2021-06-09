@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { ValidateIf } from 'class-validator';
+import { IsIn, ValidateIf } from 'class-validator';
 
 export class RelationUserDto {
   @ValidateIf((o) => validator.isMongoId(o))
@@ -7,4 +7,7 @@ export class RelationUserDto {
 
   @ValidateIf((o) => validator.isMongoId(o))
   targetId: string;
+
+  @IsIn(['like', 'dislike'])
+  action: string;
 }

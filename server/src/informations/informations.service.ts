@@ -8,7 +8,6 @@ import {
   InformationDocument,
 } from './schemas/informations.schema';
 
-// Thoughts: information service should use user service
 @Injectable()
 export class InformationsService {
   constructor(

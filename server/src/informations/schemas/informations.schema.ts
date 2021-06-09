@@ -1,7 +1,7 @@
-import { Document } from 'mongoose';
+import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 
-export type InformationDocument = Information & Document;
+export type InformationDocument = Information & mongoose.Document;
 
 @Schema({ timestamps: true })
 export class Information {

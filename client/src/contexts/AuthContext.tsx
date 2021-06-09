@@ -5,25 +5,16 @@ import { useAlert } from "react-alert";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 import { login, refreshToken, signup } from "../api/auth";
-
-type AuthState = {
-  token: string | null;
-  user: any;
-};
-
-type UserCredentials = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-};
+import { IAuthContext, AuthState, UserCredentials } from "../types/Context";
 
 export const initialState: AuthState = {
   token: null,
   user: null,
 };
 
-export const AuthContext = createContext<AuthState | any>(initialState);
+export const AuthContext = createContext<IAuthContext>({
+  auth: initialState,
+});
 
 export default function AuthContextProvider({
   children,
@@ -71,13 +62,26 @@ export default function AuthContextProvider({
     password,
   }: Partial<UserCredentials>) {
     return signup({ firstName, lastName, email, password })
-      .then((data) => setAuth(data.access_token))
-      .catch(() => alert.error("Something went wrong"));
+      .then((data) => {
+        if (data.access_token) {
+          return setAuth(data.access_token);
+        }
+        alert.error(data.message);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert.error("Something went wrong");
+      });
   }
 
   function loginAndSetAuth({ email, password }: Partial<UserCredentials>) {
     return login({ email, password })
-      .then((data) => setAuth(data.access_token))
+      .then((data) => {
+        if (data.access_token) {
+          return setAuth(data.access_token);
+        }
+        alert.error(data.message);
+      })
       .catch(() => alert.error("Something went wrong"));
   }
 

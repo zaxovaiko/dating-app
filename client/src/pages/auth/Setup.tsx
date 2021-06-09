@@ -5,6 +5,7 @@ import { YMaps, Map, Placemark } from "react-yandex-maps";
 import { updateInformation } from "../../api/user";
 import Layout from "../../components/layout/Layout";
 import { AuthContext } from "../../contexts/AuthContext";
+import { IAuthContext } from "../../types/Context";
 
 type Coordinates = {
   longitude: number;
@@ -29,7 +30,7 @@ type CustomForm = {
 
 function Setup() {
   const history = useHistory();
-  const { auth, refreshAndSetAuth } = useContext(AuthContext);
+  const { auth, refreshAndSetAuth } = useContext<IAuthContext>(AuthContext);
   const [form, setForm] = useState<UpdateUserDto & CustomForm>({
     birthDate: undefined,
     avatar: "",
@@ -48,6 +49,10 @@ function Setup() {
 
   function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
+
+    if (!auth.user || !auth.token) {
+      return;
+    }
 
     updateInformation(auth.user.id, form, auth.token)
       .then(() => {

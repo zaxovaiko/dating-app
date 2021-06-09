@@ -32,7 +32,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOneById(id, '-password');
+    return this.usersService.findOneById(id);
   }
 
   @Patch(':id/avatar')
@@ -62,14 +62,9 @@ export class UsersController {
     return this.usersService.updateInformation(id, updateInformationDto);
   }
 
-  @Patch('like')
-  likeUser(@Body() relationUserDto: RelationUserDto) {
-    return this.usersService.likeUser(relationUserDto);
-  }
-
-  @Patch('dislike')
-  dislikeUser(@Body() relationUserDto: RelationUserDto) {
-    return this.usersService.dislikeUser(relationUserDto);
+  @Patch('action')
+  makeActionWithUser(@Body() relationUserDto: RelationUserDto) {
+    return this.usersService.makeActionWithUser(relationUserDto);
   }
 
   @Delete(':id')

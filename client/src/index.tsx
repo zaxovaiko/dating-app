@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { positions, transitions, Provider as AlertProvider } from "react-alert";
 import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./index.css";
 import App from "./App";
 import AuthContextProvider from "./contexts/AuthContext";
