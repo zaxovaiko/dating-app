@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Document, Model, UpdateQuery } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateOptionalInformationDto } from './dto/create-information.dto';
 import { UpdateInformationDto } from './dto/update-information.dto';
 import {
@@ -17,6 +17,10 @@ export class InformationsService {
 
   create(createInformationDto: CreateOptionalInformationDto) {
     return this.informationsModel.create(createInformationDto);
+  }
+
+  deleteMany() {
+    return this.informationsModel.deleteMany({});
   }
 
   findOneById(id: string) {

@@ -17,7 +17,7 @@ function Setup() {
   const alert = useAlert();
   const history = useHistory();
   const { auth, refreshAndSetAuth } = useContext<IAuthContext>(AuthContext);
-  const [form, setForm] = useState<UpdateUserDto & CustomForm>({
+  const [form, setForm] = useState<UpdateUserDto & CustomForm & Partial<User>>({
     birthDate: new Date(new Date().getFullYear() - 18, 1, 1),
     avatar: "",
     sex: "male",
@@ -54,7 +54,7 @@ function Setup() {
         })
         .catch(console.log);
     }
-  }, [auth, form.birthDate]);
+  }, []);
 
   async function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
@@ -127,7 +127,7 @@ function Setup() {
                 Birth date
               </label>
               <input
-                value={form.birthDate.toISOString().slice(0, 10)}
+                value={form.birthDate?.toISOString().slice(0, 10)}
                 onChange={(e) =>
                   setForm((p: any) => ({
                     ...p,
@@ -197,14 +197,14 @@ function Setup() {
             </div>
 
             <div className="d-flex flex-wrap">
-              {form.hobbies.map((hobby) => (
+              {form.hobbies?.map((hobby) => (
                 <span
                   key={hobby}
                   className="badge bg-info me-1"
                   onClick={() =>
                     setForm((p) => ({
                       ...p,
-                      hobbies: p.hobbies.filter((e) => e !== hobby),
+                      hobbies: p.hobbies?.filter((e) => e !== hobby),
                     }))
                   }
                 >
@@ -248,14 +248,14 @@ function Setup() {
           </div>
 
           <div className="d-flex flex-wrap mb-3">
-            {form.languages.map((lang) => (
+            {form.languages?.map((lang) => (
               <span
                 key={lang}
                 className="badge bg-info me-1"
                 onClick={() =>
                   setForm((p) => ({
                     ...p,
-                    languages: p.languages.filter((e) => e !== lang),
+                    languages: p.languages?.filter((e) => e !== lang),
                   }))
                 }
               >
@@ -281,8 +281,14 @@ function Setup() {
                 defaultState={{ center: [0, 0], zoom: 1 }}
               >
                 <Placemark
-                  key={Object.values(form.coordinates).join(",")}
-                  geometry={Object.values(form.coordinates)}
+                  key={[
+                    form.coordinates?.latitude,
+                    form.coordinates?.longitude,
+                  ].join(",")}
+                  geometry={[
+                    form.coordinates?.latitude as number,
+                    form.coordinates?.longitude as number,
+                  ]}
                 />
               </Map>
             </YMaps>

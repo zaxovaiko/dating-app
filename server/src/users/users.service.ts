@@ -21,6 +21,10 @@ export class UsersService {
     private configServer: ConfigService,
   ) {}
 
+  getRandom() {
+    return this.usersModel.aggregate([{ $sample: { size: 1 } }]);
+  }
+
   async create(createUserDto: CreateUserDto) {
     if (await this.findOneByEmail(createUserDto.email)) {
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
@@ -68,12 +72,15 @@ export class UsersService {
     throw new HttpException('Wrong old password', HttpStatus.NOT_ACCEPTABLE);
   }
 
+  deleteMany() {
+    return this.usersModel.deleteMany({});
+  }
+
   async updateInformation(
     id: string,
     updateInformationDto: UpdateInformationDto,
   ) {
     const user = await this.findOneById(id, '-password');
-
     const information = await this.informationsService.update(
       String((user.information as InformationDocument).id),
       updateInformationDto,

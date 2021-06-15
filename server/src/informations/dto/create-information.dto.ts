@@ -1,10 +1,8 @@
 import { PartialType } from '@nestjs/mapped-types';
 import {
-  IsDate,
   IsIn,
   IsLatitude,
   IsLongitude,
-  IsNotEmpty,
   IsString,
   MaxLength,
   ValidateIf,
@@ -13,15 +11,15 @@ import {
 
 export class Coordinates {
   @IsLongitude()
-  longitude: number;
+  longitude: number | string;
 
   @IsLatitude()
-  latitude: number;
+  latitude: number | string;
 }
 
 export class CreateInformationDto {
   @ValidateIf((o) => !isNaN(new Date(o).getDate()))
-  birthDate: string;
+  birthDate: Date;
 
   @IsIn(['male', 'female', 'other'])
   sex: string;
@@ -32,12 +30,12 @@ export class CreateInformationDto {
   @MaxLength(12, {
     each: true,
   })
-  hobbies: Set<string>;
+  hobbies: string[];
 
   @MaxLength(12, {
     each: true,
   })
-  languages: Set<string>;
+  languages: string[];
 
   @IsString({
     each: true,

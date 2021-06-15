@@ -53,8 +53,12 @@ export default function Settings() {
                     >
                       <i
                         className={`bi bi-gender-${
-                          user.information.sex === "male" ? "" : "fe"
-                        }male`}
+                          {
+                            male: "male",
+                            female: "female",
+                            other: "ambiguous",
+                          }[user.information.sex]
+                        }`}
                       ></i>{" "}
                     </span>{" "}
                     {user.firstName} {user.lastName}{" "}
