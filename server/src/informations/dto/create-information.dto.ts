@@ -4,8 +4,10 @@ import {
   IsIn,
   IsLatitude,
   IsLongitude,
+  IsNotEmpty,
   IsString,
   MaxLength,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
@@ -18,8 +20,8 @@ export class Coordinates {
 }
 
 export class CreateInformationDto {
-  @IsDate()
-  birthDate: Date;
+  @ValidateIf((o) => !isNaN(new Date(o).getDate()))
+  birthDate: string;
 
   @IsIn(['male', 'female', 'other'])
   sex: string;

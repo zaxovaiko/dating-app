@@ -11,6 +11,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateNameUserDto } from './dto/update-name-user.dto';
 import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
+import { UpdatePasswordUserDto } from './dto/update-password-user.dto';
 import { UpdateInformationDto } from 'src/informations/dto/update-information.dto';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { Role } from 'src/auth/roles/role.enum';
@@ -44,12 +45,22 @@ export class UsersController {
     return this.usersService.updateAvatar(id, updateAvatarUserDto);
   }
 
+  @Patch(':id/password')
+  @Roles(Role.Admin)
+  updatePassword(
+    @Param('id') id: string,
+    @Body() updatePasswordUserDto: UpdatePasswordUserDto,
+  ) {
+    return this.usersService.updatePassword(id, updatePasswordUserDto);
+  }
+
   @Patch(':id')
   @Roles(Role.Admin)
   updateName(
     @Param('id') id: string,
     @Body() updateNameUserDto: UpdateNameUserDto,
   ) {
+    console.log(updateNameUserDto);
     return this.usersService.updateName(id, updateNameUserDto);
   }
 
@@ -59,6 +70,7 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updateInformationDto: UpdateInformationDto,
   ) {
+    console.log(updateInformationDto);
     return this.usersService.updateInformation(id, updateInformationDto);
   }
 

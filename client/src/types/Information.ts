@@ -3,15 +3,15 @@ export interface Information {
   birthDate: Date;
   status: string;
   images: string[];
-  location: Location;
+  coordinates: Location;
   sex: string;
   hobbies: string[];
   languages: string[];
 }
 
 export interface Location {
-  country: string;
-  city: string;
+  country?: string;
+  city?: string;
   latitude: number;
   longitude: number;
 }

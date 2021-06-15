@@ -3,7 +3,6 @@ import validator from "validator";
 import { Link } from "react-router-dom";
 import { SyntheticEvent, useContext, useState } from "react";
 import { useAlert } from "react-alert";
-import Layout from "../../components/layout/Layout";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Login() {
@@ -23,7 +22,7 @@ export default function Login() {
   }
 
   return (
-    <Layout>
+    <>
       <Helmet>
         <title>Log in</title>
       </Helmet>
@@ -59,6 +58,6 @@ export default function Login() {
         <Link to="/signup">Sign up</Link>
         <button className="btn btn-danger float-end">Log in</button>
       </form>
-    </Layout>
+    </>
   );
 }

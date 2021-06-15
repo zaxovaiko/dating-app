@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Document, Model, UpdateQuery } from 'mongoose';
 import { CreateOptionalInformationDto } from './dto/create-information.dto';
 import { UpdateInformationDto } from './dto/update-information.dto';
 import {
@@ -24,12 +24,11 @@ export class InformationsService {
   }
 
   async update(id: string, updateInformationDto: UpdateInformationDto) {
-    const info = await this.findOneById(id);
-    for (const [key, value] of Object.entries(updateInformationDto)) {
-      // TODO: Add set for hobbies and languages
-      info[key] = value;
-    }
-    return await info.save();
+    await this.informationsModel.findByIdAndUpdate(
+      id,
+      updateInformationDto as any,
+    );
+    return true;
   }
 
   async remove(id: string) {

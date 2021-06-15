@@ -12,7 +12,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter } from "react-router-dom";
 
 const options = {
-  position: positions.BOTTOM_RIGHT,
+  position: positions.TOP_CENTER,
   timeout: 5000,
   offset: "15px",
   transition: transitions.SCALE,

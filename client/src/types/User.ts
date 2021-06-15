@@ -1,4 +1,4 @@
-import { Information } from "./Information";
+import { Information } from "./information";
 
 export interface User {
   id: string;

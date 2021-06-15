@@ -25,13 +25,11 @@ export class Information {
 
   @Prop(
     raw({
-      country: { type: String },
-      city: { type: String },
       longitude: { type: Number },
       latitude: { type: Number },
     }),
   )
-  location: Record<string, any>;
+  coordinates: Record<string, number>;
 }
 
 export const InformationSchema = SchemaFactory.createForClass(Information);

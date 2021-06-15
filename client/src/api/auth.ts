@@ -1,4 +1,4 @@
-import { User } from "../types/User";
+import { User } from "../types/user";
 
 export function login({ email, password }: Partial<User>): Promise<any> {
   return fetch(process.env.REACT_APP_HOST + "/auth/login", {

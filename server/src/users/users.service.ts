@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { Document, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -10,7 +10,8 @@ import { UpdateAvatarUserDto } from './dto/update-avatar-user.dto';
 import { InformationsService } from 'src/informations/informations.service';
 import { UpdateInformationDto } from 'src/informations/dto/update-information.dto';
 import { RelationUserDto } from './dto/relation-user.dto';
-import { Information } from '../informations/interfaces/informations.interface';
+import { InformationDocument } from '../informations/schemas/informations.schema';
+import { UpdatePasswordUserDto } from './dto/update-password-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -44,13 +45,27 @@ export class UsersService {
   }
 
   async updateName(id: string, updateNameUserDto: UpdateNameUserDto) {
-    const user = await this.findOneById(id);
-    for (const [key, value] of Object.entries(updateNameUserDto)) {
-      user[key] = value;
+    const { password, saved, liked, disliked, ...rest } =
+      await this.usersModel.findByIdAndUpdate(id, updateNameUserDto, {
+        lean: true,
+      });
+    return rest;
+  }
+
+  async updatePassword(id: string, updatePasswordDto: UpdatePasswordUserDto) {
+    const user = await this.findOneById(id, 'password');
+    const match = await bcrypt.compare(
+      updatePasswordDto.password,
+      user.password,
+    );
+    if (match) {
+      user.password = await bcrypt.hash(
+        updatePasswordDto.newPassword,
+        parseInt(this.configServer.get<string>('BCRYPT_SALT_ROUNDS', '12')),
+      );
+      return await user.save();
     }
-    await user.save();
-    user.password = undefined;
-    return user;
+    throw new HttpException('Wrong old password', HttpStatus.NOT_ACCEPTABLE);
   }
 
   async updateInformation(
@@ -58,9 +73,9 @@ export class UsersService {
     updateInformationDto: UpdateInformationDto,
   ) {
     const user = await this.findOneById(id, '-password');
-    const informationId = user.information as Information & Document;
+
     const information = await this.informationsService.update(
-      String(informationId.id),
+      String((user.information as InformationDocument).id),
       updateInformationDto,
     );
     if (!information) {

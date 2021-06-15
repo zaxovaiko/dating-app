@@ -5,12 +5,14 @@ import { SignupAuthDto } from './dto/signup-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsersService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   googleAuth(access_token: any): any {
@@ -56,14 +58,19 @@ export class AuthService {
     const user = await this.userService.findOneByEmail(loginAuthDto.email);
     const { firstName, lastName, email, id, roles, completeSignup } = user;
     return {
-      access_token: this.jwtService.sign({
-        firstName,
-        lastName,
-        email,
-        id,
-        roles,
-        completeSignup,
-      }),
+      access_token: this.jwtService.sign(
+        {
+          firstName,
+          lastName,
+          email,
+          id,
+          roles,
+          completeSignup,
+        },
+        {
+          expiresIn: this.configService.get<string>('JWT_EXPIRES_IN', '24h'),
+        },
+      ),
     };
   }
 }

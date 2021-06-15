@@ -1,13 +1,12 @@
 import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
-import Layout from "../components/layout/Layout";
 import { AuthContext } from "../contexts/AuthContext";
-import { IAuthContext } from "../types/Context";
+import { IAuthContext } from "../types/context";
 
 export default function Home() {
   const { auth } = useContext<IAuthContext>(AuthContext);
   return (
-    <Layout>
+    <>
       <Helmet>
         <title>Dating App</title>
       </Helmet>
@@ -15,6 +14,6 @@ export default function Home() {
       <div className="mx-auto">
         Hello, {auth.user?.firstName} {auth.user?.lastName}
       </div>
-    </Layout>
+    </>
   );
 }

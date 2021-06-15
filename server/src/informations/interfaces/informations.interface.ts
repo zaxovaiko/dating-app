@@ -5,12 +5,10 @@ export interface Information {
   languages: string[];
   hobbies: string[];
   images: string[];
-  location: Location;
+  coordinates: Coordinates;
 }
 
-export interface Location {
-  country: string;
-  city: string;
+export interface Coordinates {
   latitude: number;
   longitude: number;
 }

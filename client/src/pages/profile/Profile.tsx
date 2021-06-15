@@ -1,10 +1,11 @@
 import { useEffect, useState, useContext } from "react";
-import Layout from "../../components/layout/Layout";
 import { getOneUser } from "../../api/user";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useAlert } from "react-alert";
-import { User } from "../../types/User";
+import { User } from "../../types/user";
 import InformationList from "./components/InformationList";
+import { Map, Placemark, YMaps } from "react-yandex-maps";
+import { Helmet } from "react-helmet-async";
 
 export default function Settings() {
   const alert = useAlert();
@@ -22,48 +23,83 @@ export default function Settings() {
   }, []);
 
   return (
-    <Layout>
+    <>
+      <Helmet>
+        <title>
+          {auth.user?.firstName + " " + auth.user?.lastName} - profile
+        </title>
+      </Helmet>
+
       <div className="row py-5">
         <div className="col-6 offset-3">
-          {!user.completeSignup && (
-            <h4 className="">Could not load the profile</h4>
-          )}
+          {!user.completeSignup && <h4>Could not load the profile</h4>}
           {user.information && (
             <>
-              <div className="mb-3">
-                <img className="w-100 rounded mb-3" src={user.avatar} alt="" />
-                <h3 className="d-flex align-items-center">
-                  <span
-                    className={`badge bg-${
-                      user.information.sex === "male" ? "primary" : "danger"
-                    } me-2`}
-                  >
-                    <i
-                      className={`bi bi-gender-${
-                        user.information.sex === "male" ? "" : "fe"
-                      }male`}
-                    ></i>{" "}
-                  </span>{" "}
-                  {user.firstName} {user.lastName}{" "}
-                  {user.information.birthDate || null}
-                </h3>
-                <p className="mb-4">
-                  {user.information.location
-                    ? user.information.location
-                    : "Unknown location"}
-                </p>
-                <p>{user.information.status || ""}</p>
+              <div className="row mb-4">
+                <div className="col-12 col-md-5">
+                  <img
+                    className="w-100 rounded mb-3"
+                    src={user.avatar}
+                    alt=""
+                  />
+                  <p>{user.information.status || ""}</p>
+                </div>
+                <div className="col-12 col-md-7">
+                  <h3 className="d-flex align-items-center mb-4">
+                    <span
+                      className={`badge bg-${
+                        user.information.sex === "male" ? "primary" : "danger"
+                      } me-2`}
+                    >
+                      <i
+                        className={`bi bi-gender-${
+                          user.information.sex === "male" ? "" : "fe"
+                        }male`}
+                      ></i>{" "}
+                    </span>{" "}
+                    {user.firstName} {user.lastName}{" "}
+                    {new Date().getFullYear() -
+                      new Date(user.information.birthDate).getFullYear() ||
+                      null}
+                  </h3>
+
+                  {user.information.coordinates ? (
+                    <YMaps query={{ lang: "en_US" }}>
+                      <Map
+                        style={{ width: "100%", height: "250px" }}
+                        defaultState={{
+                          center: Object.values(user.information.coordinates),
+                          zoom: 5,
+                        }}
+                      >
+                        <Placemark
+                          key={Object.values(user.information.coordinates).join(
+                            ","
+                          )}
+                          geometry={Object.values(user.information.coordinates)}
+                        />
+                      </Map>
+                    </YMaps>
+                  ) : (
+                    "Unknown location"
+                  )}
+                </div>
               </div>
 
-              <InformationList title="Hobby" list={user.information.hobbies} />
-              <InformationList
-                title="Language"
-                list={user.information.languages}
-              />
+              <div className="row">
+                <InformationList
+                  title="Hobby"
+                  list={user.information.hobbies}
+                />
+                <InformationList
+                  title="Language"
+                  list={user.information.languages}
+                />
+              </div>
             </>
           )}
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

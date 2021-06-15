@@ -1,7 +1,6 @@
 import validator from "validator";
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import Layout from "../../components/layout/Layout";
 import { SyntheticEvent } from "react";
 import { useAlert } from "react-alert";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -39,7 +38,7 @@ export default function Signup() {
   }
 
   return (
-    <Layout>
+    <>
       <Helmet>
         <title>Sign up</title>
       </Helmet>
@@ -131,6 +130,6 @@ export default function Signup() {
           Continue
         </button>
       </form>
-    </Layout>
+    </>
   );
 }

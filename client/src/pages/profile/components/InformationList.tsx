@@ -13,7 +13,7 @@ export default function InformationList({
       {list.length === 0 && <p>There is no any {title.toLowerCase()} yet</p>}
       {list.length > 0 &&
         list.map((elem: string) => (
-          <span key={elem} className="badge bg-info">
+          <span key={elem} className="badge bg-info me-2">
             {elem}
           </span>
         ))}
